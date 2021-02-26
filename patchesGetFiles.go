@@ -1,6 +1,7 @@
 package update_api_1c
 
 import (
+	"bytes"
 	"github.com/monaco-io/request"
 	"io"
 )
@@ -29,7 +30,7 @@ type PatchDistributionData struct {
 }
 
 type PatchDistributionFile struct {
-	io.ReadCloser
+	io.Reader
 	PatchDistributionData
 }
 
@@ -66,14 +67,26 @@ func (c *Client) GetPatchesFilesInfo(patchUinList ...string) (PatchesGetFilesRes
 
 func (c *Client) GetPatchDistributionData(data PatchDistributionData) (*PatchDistributionFile, error) {
 
-	resp, err := c.doFileRequest(data.PatchFileUrl)
+	type loginParams struct {
+		Login    string `json:"login"`
+		Password string `json:"password"`
+	}
+
+	resp, err := c.doRawRequest("", apiRequest{
+		data.PatchFileUrl,
+		request.POST,
+		loginParams{
+			c.Username,
+			c.Password,
+		},
+	})
 
 	if err != nil {
 		return nil, err
 	}
 
 	return &PatchDistributionFile{
-		resp,
+		bytes.NewBuffer(resp.Bytes()),
 		data,
 	}, nil
 }

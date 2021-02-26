@@ -82,6 +82,8 @@ func (c *Client) doFileRequest(fileRequestUrl string) (io.ReadCloser, error) {
 			return nil, jsonErr
 		}
 		return nil, err
+	case http.StatusOK:
+		return res.Body, nil
 	}
 
 	return res.Body, nil
@@ -90,8 +92,14 @@ func (c *Client) doFileRequest(fileRequestUrl string) (io.ReadCloser, error) {
 
 func (c *Client) doRequest(req apiRequest) (*response.Sugar, error) {
 
+	return c.doRawRequest(c.BaseURL, req)
+
+}
+
+func (c *Client) doRawRequest(baseURL string, req apiRequest) (*response.Sugar, error) {
+
 	client := request.Client{
-		URL:    c.BaseURL + req.path,
+		URL:    baseURL + req.path,
 		Method: req.method,
 		JSON:   req.data,
 		Header: map[string]string{
@@ -101,6 +109,11 @@ func (c *Client) doRequest(req apiRequest) (*response.Sugar, error) {
 	}
 
 	resp := client.Send()
+	if !resp.OK() {
+		log.Error("Error while doRequest: " + resp.Error().Error())
+		return nil, resp.Error()
+	}
+
 	httpRes := resp.Response()
 
 	switch httpRes.StatusCode {
@@ -108,11 +121,6 @@ func (c *Client) doRequest(req apiRequest) (*response.Sugar, error) {
 		var err RequestError
 		resp.Scan(&err)
 		return nil, err
-	}
-
-	if !resp.OK() {
-		log.Error("Error while doRequest: " + resp.Error().Error())
-		return nil, resp.Error()
 	}
 
 	return resp, nil

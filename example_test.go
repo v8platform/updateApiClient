@@ -3,7 +3,9 @@ package update_api_1c_test
 import (
 	"github.com/k0kubun/pp"
 	update_api_1c "github.com/v8platform/update-api-1c"
+
 	"io"
+	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -91,16 +93,136 @@ func ExampleClient_GetConfigurationUpdateData() {
 			log.Fatal(err)
 		}
 
-		distPath := strings.ReplaceAll(updateDataFile.TemplatePath, "\\", string(os.PathSeparator))
+		pp.Println("Download:", updateDataFile.UpdateFileUrl)
 
-		f, err := os.Create(filepath.Join(".", distPath, updateDataFile.UpdateFileName))
+		distPath := strings.ReplaceAll(updateDataFile.TemplatePath, "\\", string(os.PathSeparator))
+		distPath = filepath.Join(".", distPath)
+		pp.Println("Path:", distPath)
+
+		err = os.MkdirAll(distPath, os.ModeDir)
 		if err != nil {
 			log.Fatal(err)
 		}
+
+		f, err := ioutil.TempFile("", "."+updateDataFile.UpdateFileFormat)
+		if err != nil {
+			log.Fatal(err)
+		}
+		_, err = io.Copy(f, updateDataFile)
+
 		f.Close()
 		updateDataFile.Close()
 
-		_, err = io.Copy(f, updateDataFile)
+		err = update_api_1c.UnzipFile(f.Name(), distPath)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+	}
+
+}
+
+func ExampleClient_GetPatchesInfo() {
+
+	client := update_api_1c.NewClient("ITS_USER", "ITS_PASSWORD")
+
+	patchesInfo, err := client.GetPatchesInfo("Accounting",
+		"3.0.88.22")
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Printf("Get paches info for %d", len(patchesInfo.PatchUpdateList))
+
+}
+
+func ExampleClient_GetPatchesFilesInfo() {
+
+	client := update_api_1c.NewClient("ITS_USER", "ITS_PASSWORD")
+
+	patchesInfo, err := client.GetPatchesInfo("Accounting",
+		"3.0.88.22")
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Printf("Get paches info for %d", len(patchesInfo.PatchUpdateList))
+
+	var patchesList []string
+	for _, update := range patchesInfo.PatchUpdateList {
+		patchesList = append(patchesList, update.Ueid)
+	}
+
+	patchesFilesInfo, err := client.GetPatchesFilesInfo(patchesList...)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Printf("Get paches files info for %d", len(patchesFilesInfo.PatchDistributionDataList))
+
+}
+
+func ExampleClient_GetPatchDistributionData() {
+
+	client := update_api_1c.NewClient("ITS_USER", "ITS_PASSWORD")
+
+	patchesInfo, err := client.GetPatchesInfo("Accounting",
+		"3.0.88.22")
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Printf("Get paches info for %d", len(patchesInfo.PatchUpdateList))
+
+	var patchesList []string
+	patchesNames := make(map[string]string)
+	for _, update := range patchesInfo.PatchUpdateList {
+		patchesList = append(patchesList, update.Ueid)
+		patchesNames[update.Ueid] = update.Name
+	}
+
+	patchesFilesInfo, err := client.GetPatchesFilesInfo(patchesList...)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Printf("Get paches files info for %d", len(patchesFilesInfo.PatchDistributionDataList))
+
+	for _, data := range patchesFilesInfo.PatchDistributionDataList {
+		fileInfo, err := client.GetPatchDistributionData(data)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		pp.Println("Download:", fileInfo.PatchFileUrl)
+
+		distPath := strings.ReplaceAll(fileInfo.PatchFileName, "\\", string(os.PathSeparator))
+		distPath = filepath.Join(".", "patches", patchesNames[fileInfo.PatchUeid])
+		pp.Println("Path:", distPath)
+
+		err = os.MkdirAll(distPath, os.ModeDir)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		f, err := ioutil.TempFile("", ".pzip")
+		if err != nil {
+			log.Fatal(err)
+		}
+		_, err = io.Copy(f, fileInfo)
+
+		f.Close()
+
+		err = update_api_1c.UnzipFile(f.Name(), distPath)
+		if err != nil {
+			log.Fatal(err)
+		}
+
 	}
 
 }

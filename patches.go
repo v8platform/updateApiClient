@@ -12,7 +12,7 @@ type PatchesInfoRequest struct {
 }
 
 type PatchesInfoResponse struct {
-	*ErrorResponse
+	ErrorResponse
 	PatchUpdateList []PatchUpdate `json:"patchUpdateList"`
 }
 
@@ -24,20 +24,20 @@ func (c PatchesInfoResponse) Error() error {
 }
 
 type PatchUpdate struct {
-	Ueid                string `json:"ueid"`
-	Name                string `json:"name"`
-	Description         string `json:"description"`
-	BuildDate           int64  `json:"buildDate"`
-	ModificatedMetadata string `json:"modificatedMetadata"`
-	Status              string `json:"status"`
-	Size                int    `json:"size"`
+	Ueid                string           `json:"ueid"`
+	Name                string           `json:"name"`
+	Description         string           `json:"description"`
+	BuildDate           int64            `json:"buildDate"`
+	ModificatedMetadata string           `json:"modificatedMetadata"`
+	Status              string           `json:"status"`
+	Size                int              `json:"size"`
 	ApplyToVersion      []ProgramVersion `json:"applyToVersion"`
 }
 
-func (c *Client) GetPatchesInfo(programName, programVersion string, InstalledPatchesList... string) (PatchesInfoResponse, error) {
+func (c *Client) GetPatchesInfo(programName, programVersion string, InstalledPatchesList ...string) (PatchesInfoResponse, error) {
 
 	return c.GetPatchesInfoRequest([]ProgramVersion{
-		{programName,programVersion},
+		{programName, programVersion},
 	}, InstalledPatchesList)
 
 }

@@ -71,7 +71,7 @@ func (c *Client) GetConfigurationUpdateData(data ConfigurationUpdateData) (*Conf
 }
 
 type UpdateResponse struct {
-	*ErrorResponse
+	ErrorResponse
 	ConfigurationUpdateDataList []ConfigurationUpdateData `json:"configurationUpdateDataList"`
 	PlatformDistributionUrl     string                    `json:"platformDistributionUrl"`
 	AdditionalParameters        map[string]string         `json:"additionalParameters"`

@@ -17,7 +17,7 @@ type PatchesGetFilesRequest struct {
 }
 
 type PatchesGetFilesResponse struct {
-	*ErrorResponse
+	ErrorResponse
 	PatchDistributionDataList []PatchDistributionData `json:"patchDistributionDataList"`
 }
 

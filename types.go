@@ -7,7 +7,7 @@ type ErrorResponse struct {
 	ErrorMessage string `json:"errorMessage"`
 }
 
-func (c *ErrorResponse) Error() string {
+func (c ErrorResponse) Error() string {
 	return fmt.Sprintf("%s: %s", c.ErrorName, c.ErrorMessage)
 }
 

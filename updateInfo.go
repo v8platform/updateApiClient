@@ -8,8 +8,8 @@ const (
 	updateInfoPath = "/update-platform/programs/update/info"
 
 	NewConfigurationAndOrPlatformUpdateType = "NewConfigurationAndOrPlatform" // - РабочееОбновление
-	NewProgramOrRedactionUpdateType =  "NewProgramOrRedaction" // - ПереходНаДругуюПрограммуИлиРедакцию
-	NewPlatformUpdateType = "NewPlatform" // Новая платформа
+	NewProgramOrRedactionUpdateType         = "NewProgramOrRedaction"         // - ПереходНаДругуюПрограммуИлиРедакцию
+	NewPlatformUpdateType                   = "NewPlatform"                   // Новая платформа
 
 	defaultPlatformVersion = "8.3.3.641"
 )
@@ -58,7 +58,7 @@ func (c *Client) GetUpdateInfo(programName, version string, updateTypeAndPlatfor
 }
 
 type UpdateInfoResponse struct {
-	*ErrorResponse
+	ErrorResponse
 	ConfigurationUpdate  ConfigurationUpdateInfo `json:"configurationUpdateResponse"`
 	PlatformUpdate       PlatformUpdateInfo      `json:"platformUpdateResponse"`
 	AdditionalParameters map[string]string       `json:"additionalParameters"`

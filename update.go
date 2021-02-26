@@ -24,11 +24,16 @@ type ConfigurationUpdateFile struct {
 	ConfigurationUpdateData
 }
 
+type PlatformUpdateFile struct {
+	io.ReadCloser
+}
+
 type UpdateRequest struct {
-	ProgramVersionUin string   `json:"programVersionUin"`
-	UpgradeSequence   []string `json:"upgradeSequence"`
-	Login             string   `json:"login"`
-	Password          string   `json:"password"`
+	ProgramVersionUin       string   `json:"programVersionUin"`
+	UpgradeSequence         []string `json:"upgradeSequence"`
+	PlatformDistributionUin string   `json:"platformDistributionUin"`
+	Login                   string   `json:"login"`
+	Password                string   `json:"password"`
 }
 
 func (c *Client) GetUpdate(programVersionUin string, UpgradeSequence []string) (UpdateResponse, error) {
@@ -37,6 +42,33 @@ func (c *Client) GetUpdate(programVersionUin string, UpgradeSequence []string) (
 	data := UpdateRequest{
 		programVersionUin,
 		UpgradeSequence,
+		"",
+		c.Username,
+		c.Password,
+	}
+
+	resp, err := c.doRequest(apiRequest{
+		updatePath,
+		request.POST,
+		data,
+	})
+
+	if err != nil {
+		return result, err
+	}
+
+	resp.Scan(&result)
+	return result, result.Error()
+
+}
+
+func (c *Client) GetPlatformUpdate(platformDistributionUin string) (UpdateResponse, error) {
+
+	var result UpdateResponse
+	data := UpdateRequest{
+		"",
+		[]string{},
+		platformDistributionUin,
 		c.Username,
 		c.Password,
 	}
@@ -67,6 +99,19 @@ func (c *Client) GetConfigurationUpdateData(data ConfigurationUpdateData) (*Conf
 	return &ConfigurationUpdateFile{
 		resp,
 		data,
+	}, nil
+}
+
+func (c *Client) GetPlatformUpdateData(data UpdateResponse) (*PlatformUpdateFile, error) {
+
+	resp, err := c.doFileRequest(data.PlatformDistributionUrl)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &PlatformUpdateFile{
+		resp,
 	}, nil
 }
 

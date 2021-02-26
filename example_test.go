@@ -1,8 +1,8 @@
-package update_api_1c_test
+package updateApiClient_test
 
 import (
 	"github.com/k0kubun/pp"
-	update_api_1c "github.com/v8platform/update-api-1c"
+	apiClient "github.com/v8platform/updateApiClient"
 
 	"io"
 	"io/ioutil"
@@ -14,11 +14,11 @@ import (
 
 func ExampleNewClient() {
 
-	client := update_api_1c.NewClient("ITS_USER", "ITS_PASSWORD")
+	client := apiClient.NewClient("ITS_USER", "ITS_PASSWORD")
 
 	updateInfo, err := client.GetUpdateInfo("Accounting",
 		"3.0.88.22",
-		update_api_1c.NewProgramOrRedactionUpdateType, "8.3.15.2107")
+		apiClient.NewProgramOrRedactionUpdateType, "8.3.15.2107")
 
 	if err != nil {
 		log.Fatal(err)
@@ -30,11 +30,11 @@ func ExampleNewClient() {
 
 func ExampleClient_GetUpdateInfo() {
 
-	client := update_api_1c.NewClient("", "")
+	client := apiClient.NewClient("", "")
 
 	updateInfo, err := client.GetUpdateInfo("Accounting",
 		"3.0.88.22",
-		update_api_1c.NewProgramOrRedactionUpdateType, "8.3.15.2107")
+		apiClient.NewProgramOrRedactionUpdateType, "8.3.15.2107")
 
 	if err != nil {
 		log.Fatal(err)
@@ -46,11 +46,11 @@ func ExampleClient_GetUpdateInfo() {
 
 func ExampleClient_GetUpdate() {
 
-	client := update_api_1c.NewClient("ITS_USER", "ITS_PASSWORD")
+	client := apiClient.NewClient("ITS_USER", "ITS_PASSWORD")
 
 	updateInfo, err := client.GetUpdateInfo("Accounting",
 		"3.0.88.22",
-		update_api_1c.NewProgramOrRedactionUpdateType, "8.3.15.2107")
+		apiClient.NewProgramOrRedactionUpdateType, "8.3.15.2107")
 
 	if err != nil {
 		log.Fatal(err)
@@ -69,11 +69,11 @@ func ExampleClient_GetUpdate() {
 }
 
 func ExampleClient_GetConfigurationUpdateData() {
-	client := update_api_1c.NewClient("ITS_USER", "ITS_PASSWORD")
+	client := apiClient.NewClient("ITS_USER", "ITS_PASSWORD")
 
 	updateInfo, err := client.GetUpdateInfo("Accounting",
 		"3.0.88.22",
-		update_api_1c.NewProgramOrRedactionUpdateType, "8.3.15.2107")
+		apiClient.NewProgramOrRedactionUpdateType, "8.3.15.2107")
 
 	if err != nil {
 		log.Fatal(err)
@@ -113,7 +113,7 @@ func ExampleClient_GetConfigurationUpdateData() {
 		f.Close()
 		updateDataFile.Close()
 
-		err = update_api_1c.UnzipFile(f.Name(), distPath)
+		err = apiClient.UnzipFile(f.Name(), distPath)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -124,7 +124,7 @@ func ExampleClient_GetConfigurationUpdateData() {
 
 func ExampleClient_GetPatchesInfo() {
 
-	client := update_api_1c.NewClient("ITS_USER", "ITS_PASSWORD")
+	client := apiClient.NewClient("ITS_USER", "ITS_PASSWORD")
 
 	patchesInfo, err := client.GetPatchesInfo("Accounting",
 		"3.0.88.22")
@@ -139,7 +139,7 @@ func ExampleClient_GetPatchesInfo() {
 
 func ExampleClient_GetPatchesFilesInfo() {
 
-	client := update_api_1c.NewClient("ITS_USER", "ITS_PASSWORD")
+	client := apiClient.NewClient("ITS_USER", "ITS_PASSWORD")
 
 	patchesInfo, err := client.GetPatchesInfo("Accounting",
 		"3.0.88.22")
@@ -167,7 +167,7 @@ func ExampleClient_GetPatchesFilesInfo() {
 
 func ExampleClient_GetPatchDistributionData() {
 
-	client := update_api_1c.NewClient("ITS_USER", "ITS_PASSWORD")
+	client := apiClient.NewClient("ITS_USER", "ITS_PASSWORD")
 
 	patchesInfo, err := client.GetPatchesInfo("Accounting",
 		"3.0.88.22")
@@ -218,7 +218,7 @@ func ExampleClient_GetPatchDistributionData() {
 
 		f.Close()
 
-		err = update_api_1c.UnzipFile(f.Name(), distPath)
+		err = apiClient.UnzipFile(f.Name(), distPath)
 		if err != nil {
 			log.Fatal(err)
 		}

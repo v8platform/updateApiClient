@@ -1,4 +1,4 @@
-package update_api_1c
+package updateApiClient
 
 import (
 	"github.com/monaco-io/request"

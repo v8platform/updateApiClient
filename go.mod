@@ -1,4 +1,4 @@
-module github.com/v8platform/update-api-1c
+module github.com/v8platform/updateApiClient
 
 go 1.15
 

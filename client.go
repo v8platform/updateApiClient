@@ -1,4 +1,4 @@
-package update_api_1c
+package updateApiClient
 
 import (
 	"encoding/json"
@@ -12,7 +12,7 @@ import (
 	"github.com/khorevaa/logos"
 )
 
-var log = logos.New("github.com/v8platform/update-api-1c")
+var log = logos.New("github.com/v8platform/updateApiClient")
 
 const (
 	baseURL   = "https://update-api.1c.ru"

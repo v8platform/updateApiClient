@@ -1,4 +1,4 @@
-package update_api_1c
+package updateApiClient
 
 import "fmt"
 

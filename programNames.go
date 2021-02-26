@@ -1,7 +1,6 @@
-package update_api_1c
+package updateApiClient
 
 const (
 	Accounting = "Accounting"
-	ZUP = "HRM"
+	ZUP        = "HRM"
 )
-

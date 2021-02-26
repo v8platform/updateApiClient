@@ -1,4 +1,4 @@
-package update_api_1c
+package updateApiClient
 
 import (
 	"reflect"
@@ -37,7 +37,7 @@ func TestClient_GetUpdateInfo(t *testing.T) {
 				},
 			},
 			UpdateInfoResponse{
-				nil,
+				ErrorResponse{},
 				ConfigurationUpdateInfo{
 					ConfigurationVersion: "3.0.89.43",
 					Size:                 122421513,
@@ -71,7 +71,7 @@ func TestClient_GetUpdateInfo(t *testing.T) {
 			args{
 				"Accounting",
 				"3.0.88.22",
-				[]string{NewProgramOrRedactionUpdateType,""},
+				[]string{NewProgramOrRedactionUpdateType, ""},
 			},
 			UpdateInfoResponse{},
 			true,

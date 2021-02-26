@@ -1,4 +1,4 @@
-package update_api_1c
+package updateApiClient
 
 type RequestError struct {
 	Timestamp int64  `json:"timestamp"`

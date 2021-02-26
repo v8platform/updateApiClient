@@ -1,7 +1,6 @@
 package updateApiClient_test
 
 import (
-	"github.com/k0kubun/pp"
 	apiClient "github.com/v8platform/updateApiClient"
 
 	"io"
@@ -24,7 +23,7 @@ func ExampleNewClient() {
 		log.Fatal(err)
 	}
 
-	pp.Println(updateInfo)
+	log.Println(updateInfo)
 
 }
 
@@ -40,7 +39,7 @@ func ExampleClient_GetUpdateInfo() {
 		log.Fatal(err)
 	}
 
-	pp.Println(updateInfo)
+	log.Println(updateInfo)
 
 }
 
@@ -56,7 +55,7 @@ func ExampleClient_GetUpdate() {
 		log.Fatal(err)
 	}
 
-	pp.Println(updateInfo)
+	log.Println(updateInfo)
 
 	updateData, err := client.GetUpdate(updateInfo.ConfigurationUpdate.ProgramVersionUin, updateInfo.ConfigurationUpdate.UpgradeSequence)
 
@@ -64,7 +63,7 @@ func ExampleClient_GetUpdate() {
 		log.Fatal(err)
 	}
 
-	pp.Println(updateData)
+	log.Println(updateData)
 
 }
 
@@ -93,11 +92,11 @@ func ExampleClient_GetConfigurationUpdateData() {
 			log.Fatal(err)
 		}
 
-		pp.Println("Download:", updateDataFile.UpdateFileUrl)
+		log.Println("Download:", updateDataFile.UpdateFileUrl)
 
 		distPath := strings.ReplaceAll(updateDataFile.TemplatePath, "\\", string(os.PathSeparator))
 		distPath = filepath.Join(".", distPath)
-		pp.Println("Path:", distPath)
+		log.Println("Path:", distPath)
 
 		err = os.MkdirAll(distPath, os.ModeDir)
 		if err != nil {
@@ -199,11 +198,11 @@ func ExampleClient_GetPatchDistributionData() {
 			log.Fatal(err)
 		}
 
-		pp.Println("Download:", fileInfo.PatchFileUrl)
+		log.Println("Download:", fileInfo.PatchFileUrl)
 
 		distPath := strings.ReplaceAll(fileInfo.PatchFileName, "\\", string(os.PathSeparator))
 		distPath = filepath.Join(".", "patches", patchesNames[fileInfo.PatchUeid])
-		pp.Println("Path:", distPath)
+		log.Println("Path:", distPath)
 
 		err = os.MkdirAll(distPath, os.ModeDir)
 		if err != nil {

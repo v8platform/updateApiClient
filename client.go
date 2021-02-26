@@ -101,7 +101,9 @@ func (c *Client) doRequest(req apiRequest) (*response.Sugar, error) {
 	}
 
 	resp := client.Send()
-	switch resp.Response().StatusCode {
+	httpRes := resp.Response()
+
+	switch httpRes.StatusCode {
 	case http.StatusBadRequest, http.StatusNotFound:
 		var err RequestError
 		resp.Scan(&err)

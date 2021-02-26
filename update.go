@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	getUpdatePath = "/update-platform/programs/update/"
+	updatePath = "/update-platform/programs/update/"
 )
 
 type ConfigurationUpdateData struct {
@@ -42,7 +42,7 @@ func (c *Client) GetUpdate(programVersionUin string, UpgradeSequence []string) (
 	}
 
 	resp, err := c.doRequest(apiRequest{
-		getUpdatePath,
+		updatePath,
 		request.POST,
 		data,
 	})
@@ -77,4 +77,9 @@ type UpdateResponse struct {
 	AdditionalParameters        map[string]string         `json:"additionalParameters"`
 }
 
-func (c UpdateResponse) Error() error { return c.ErrorResponse }
+func (c UpdateResponse) Error() error {
+	if len(c.ErrorName) == 0 {
+		return nil
+	}
+	return c.ErrorResponse
+}

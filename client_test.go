@@ -38,7 +38,7 @@ func TestClient_GetUpdateInfo(t *testing.T) {
 			},
 			UpdateInfoResponse{
 				nil,
-				ConfigurationUpdateResponse{
+				ConfigurationUpdateInfo{
 					ConfigurationVersion: "3.0.89.43",
 					Size:                 122421513,
 					PlatformVersion:      "8.3.15.2107",
@@ -50,7 +50,7 @@ func TestClient_GetUpdateInfo(t *testing.T) {
 					},
 					ProgramVersionUin: "f78f38d1-cdc3-49d8-9c7d-99fb3f992b51",
 				},
-				PlatformUpdateResponse{
+				PlatformUpdateInfo{
 					PlatformVersion:   "8.3.17.1851",
 					TransitionInfoUrl: "https://dl03.1c.ru/content//AutoUpdatesFiles/Platform/8_3_17_1851/V8Update.htm",
 					ReleaseUrl:        "https://releases.1c.ru/version_files?nick=Platform83&ver=8.3.17.1851&needAccessToken=true",
@@ -71,7 +71,7 @@ func TestClient_GetUpdateInfo(t *testing.T) {
 			args{
 				"Accounting",
 				"3.0.88.22",
-				nil,
+				[]string{NewProgramOrRedactionUpdateType,""},
 			},
 			UpdateInfoResponse{},
 			true,

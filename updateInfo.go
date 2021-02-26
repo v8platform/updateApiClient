@@ -5,9 +5,13 @@ import (
 )
 
 const (
-	getUpdateInfoPath = "update-platform/programs/update/info"
+	updateInfoPath = "/update-platform/programs/update/info"
 
-	NewProgramOrRedactionUpdateType = "NewProgramOrRedaction"
+	NewConfigurationAndOrPlatformUpdateType = "NewConfigurationAndOrPlatform" // - РабочееОбновление
+	NewProgramOrRedactionUpdateType =  "NewProgramOrRedaction" // - ПереходНаДругуюПрограммуИлиРедакцию
+	NewPlatformUpdateType = "NewPlatform" // Новая платформа
+
+	defaultPlatformVersion = "8.3.3.641"
 )
 
 type UpdateInfoRequest struct {
@@ -21,7 +25,7 @@ func (c *Client) GetUpdateInfo(programName, version string, updateTypeAndPlatfor
 	var result UpdateInfoResponse
 
 	updateType := NewProgramOrRedactionUpdateType
-	platformVersion := ""
+	platformVersion := defaultPlatformVersion
 
 	if len(updateTypeAndPlatformVersion) == 1 {
 		updateType = updateTypeAndPlatformVersion[0]
@@ -39,7 +43,7 @@ func (c *Client) GetUpdateInfo(programName, version string, updateTypeAndPlatfor
 	}
 
 	resp, err := c.doRequest(apiRequest{
-		getUpdateInfoPath,
+		updateInfoPath,
 		request.POST,
 		data,
 	})
@@ -55,15 +59,21 @@ func (c *Client) GetUpdateInfo(programName, version string, updateTypeAndPlatfor
 
 type UpdateInfoResponse struct {
 	*ErrorResponse
-	ConfigurationUpdateResponse ConfigurationUpdateResponse `json:"configurationUpdateResponse"`
-	PlatformUpdateResponse      PlatformUpdateResponse      `json:"platformUpdateResponse"`
-
-	AdditionalParameters map[string]string `json:"additionalParameters"`
+	ConfigurationUpdate  ConfigurationUpdateInfo `json:"configurationUpdateResponse"`
+	PlatformUpdate       PlatformUpdateInfo      `json:"platformUpdateResponse"`
+	AdditionalParameters map[string]string       `json:"additionalParameters"`
 }
 
-func (c UpdateInfoResponse) Error() error { return c.ErrorResponse }
+func (c UpdateInfoResponse) Error() error {
 
-type ConfigurationUpdateResponse struct {
+	if len(c.ErrorName) == 0 {
+		return nil
+	}
+
+	return c.ErrorResponse
+}
+
+type ConfigurationUpdateInfo struct {
 	ConfigurationVersion string   `json:"configurationVersion"`
 	Size                 int      `json:"size"`
 	PlatformVersion      string   `json:"platformVersion"`
@@ -73,7 +83,7 @@ type ConfigurationUpdateResponse struct {
 	ProgramVersionUin    string   `json:"programVersionUin"`
 }
 
-type PlatformUpdateResponse struct {
+type PlatformUpdateInfo struct {
 	PlatformVersion   string `json:"platformVersion"`
 	TransitionInfoUrl string `json:"transitionInfoUrl"`
 	ReleaseUrl        string `json:"releaseUrl"`
